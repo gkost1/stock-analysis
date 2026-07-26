@@ -5,14 +5,14 @@ from simulations.factories import (
     PortfolioFactory,
     PortfolioHoldingsFactory,
     PortfolioTransactionsFactory,
-    ReoccurringInvestmentsFactory,
+    RecurringInvestmentsFactory,
     StudyFactory,
 )
 from simulations.models import (
     Portfolio,
     PortfolioHoldings,
     PortfolioTransactions,
-    ReoccurringInvestments,
+    RecurringInvestments,
     Study,
 )
 
@@ -38,7 +38,7 @@ class Command(BaseCommand):
             self.stdout.write("Flushing existing simulations data...")
             PortfolioTransactions.objects.all().delete()
             PortfolioHoldings.objects.all().delete()
-            ReoccurringInvestments.objects.all().delete()
+            RecurringInvestments.objects.all().delete()
             Portfolio.objects.all().delete()
             Study.objects.all().delete()
 
@@ -52,7 +52,7 @@ class Command(BaseCommand):
             for _ in range(options["transactions_per_portfolio"]):
                 PortfolioTransactionsFactory(portfolio=portfolio)
             for _ in range(options["transactions_per_portfolio"]):
-                ReoccurringInvestmentsFactory(portfolio=portfolio)
+                RecurringInvestmentsFactory(portfolio=portfolio)
 
         self.stdout.write(
             self.style.SUCCESS(

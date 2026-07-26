@@ -1,5 +1,5 @@
 from .portfolio_factory import PortfolioFactory
 from .portfolio_holdings_factory import PortfolioHoldingsFactory
 from .portfolio_transactions_factory import PortfolioTransactionsFactory
-from .reoccurring_investments_factory import ReoccurringInvestmentsFactory
+from .recurring_investments_factory import RecurringInvestmentsFactory
 from .study_factory import StudyFactory

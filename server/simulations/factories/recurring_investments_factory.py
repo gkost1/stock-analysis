@@ -2,17 +2,17 @@ from random import randint
 
 import factory
 
-from simulations.models import ReoccurringInvestments
-from simulations.models.reocurring_investments import INVESTMENT_FREQUENCY_CHOICES
+from simulations.models import RecurringInvestments
+from simulations.models.recurring_investments import INVESTMENT_FREQUENCY_CHOICES
 
 from .faker import fake
 from .portfolio_factory import PortfolioFactory
 from .portfolio_holdings_factory import TICKERS
 
 
-class ReoccurringInvestmentsFactory(factory.django.DjangoModelFactory):
+class RecurringInvestmentsFactory(factory.django.DjangoModelFactory):
     class Meta:
-        model = ReoccurringInvestments
+        model = RecurringInvestments
 
     portfolio = factory.SubFactory(PortfolioFactory)
     frequency = factory.Faker(

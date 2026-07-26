@@ -14,9 +14,9 @@ INVESTMENT_FREQUENCY_CHOICES = [
 ]
 
 
-class ReoccurringInvestments(BaseModel):
+class RecurringInvestments(BaseModel):
     portfolio = models.ForeignKey(
-        "simulations.Portfolio", on_delete=models.CASCADE, related_name="reoccuring_investments"
+        "simulations.Portfolio", on_delete=models.CASCADE, related_name="recurring_investments"
     )
     frequency = models.CharField(max_length=2, choices=INVESTMENT_FREQUENCY_CHOICES)
     ticker = models.CharField(max_length=8)

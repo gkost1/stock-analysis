@@ -1,5 +1,5 @@
 from .portfolio import Portfolio
 from .portfolio_holdings import PortfolioHoldings
 from .portfolio_transactions import PortfolioTransactions
-from .reocurring_investments import ReoccurringInvestments
+from .recurring_investments import RecurringInvestments
 from .study import Study
