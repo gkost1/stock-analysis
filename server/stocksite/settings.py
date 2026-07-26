@@ -46,7 +46,7 @@ INSTALLED_APPS = [
     "rest_framework.authtoken",
     "corsheaders",
     "core",
-    "simulations"
+    "simulations",
 ]
 
 AUTH_USER_MODEL = "core.User"
