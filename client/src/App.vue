@@ -1,11 +1,26 @@
-<script setup lang="ts"></script>
+<script setup lang="ts">
+import { ref } from 'vue'
+import Login from './components/Login.vue'
+
+const token = ref<string | null>(localStorage.getItem('token'))
+
+function onAuthenticated(newToken: string) {
+  localStorage.setItem('token', newToken)
+  token.value = newToken
+}
+
+function logout() {
+  localStorage.removeItem('token')
+  token.value = null
+}
+</script>
 
 <template>
-  <h1>You did it!</h1>
-  <p>
-    Visit <a href="https://vuejs.org/" target="_blank" rel="noopener">vuejs.org</a> to read the
-    documentation
-  </p>
+  <Login v-if="!token" @authenticated="onAuthenticated" />
+  <div v-else>
+    <h1>You're logged in!</h1>
+    <button @click="logout">Log out</button>
+  </div>
 </template>
 
 <style scoped></style>
