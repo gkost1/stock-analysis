@@ -7,9 +7,13 @@ $gray-500: #8C8C8C;
 $gray-600: #737373;
 $gray-700: #595959;
 $gray-800: #404040;
+$gray-850: #202020;
 $gray-900: #000000;
 
 ///////// Semantic Tokens /////////
 
 // Font Colors
-$font-color-default: rgba($gray-900, .75);
+$font-color-default: $gray-200;
+
+// Surface colors
+$surface-background-default: linear-gradient(180deg, $gray-900 0%, $gray-850 100%);

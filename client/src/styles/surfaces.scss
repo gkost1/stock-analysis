@@ -1,0 +1,11 @@
+@use 'colors';
+
+html,
+body {
+    min-height: 100vh;
+}
+
+body {
+    margin: 0;
+    background: colors.$surface-background-default;
+}
