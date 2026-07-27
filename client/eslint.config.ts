@@ -22,6 +22,13 @@ export default defineConfigWithVueTs(
   vueTsConfigs.recommended,
 
   {
+    name: 'app/vue-rules',
+    rules: {
+      'vue/multi-word-component-names': 'off',
+    },
+  },
+
+  {
     ...pluginCypress.configs.recommended,
     files: [
       '**/__tests__/*.{cy,spec}.{js,ts,jsx,tsx}',
