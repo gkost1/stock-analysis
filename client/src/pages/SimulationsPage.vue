@@ -13,7 +13,7 @@
         </li>
       </ul>
     </SideMenu>
-    <SimulationDetails />
+    <SimulationDetails :study="study" />
 
     <Modal v-model:open="isNewStudyModalOpen" width="l">
       <h2>New Study</h2>
@@ -33,8 +33,8 @@
 </template>
 
 <script setup lang="ts">
-import { onMounted, ref } from 'vue';
-import { useRouter } from 'vue-router';
+import { onMounted, ref, watch } from 'vue';
+import { useRoute, useRouter } from 'vue-router';
 import Button from '@/components/common/Button.vue';
 import Form from '@/components/common/Form.vue';
 import FormField from '@/components/common/FormField.vue';
@@ -43,6 +43,7 @@ import SideMenu from '@/components/common/SideMenu.vue';
 import SimulationDetails from '@/components/simulations/SimulationDetails.vue';
 import { studyService, type Study } from '@/services/studyService';
 
+const route = useRoute();
 const router = useRouter();
 
 const isNewStudyModalOpen = ref(false);
@@ -74,6 +75,12 @@ async function handleSubmit() {
   startDate.value = '';
   endDate.value = '';
 }
+
+async function loadSelectedStudy(id: string | string[] | undefined) {
+  study.value = id ? await studyService.retrieve(Number(id)) : null;
+}
+
+watch(() => route.params.id, loadSelectedStudy, { immediate: true });
 
 onMounted(loadStudies);
 </script>
