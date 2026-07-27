@@ -2,6 +2,7 @@ from django.core.management import call_command
 from django.core.management.base import BaseCommand
 from django.db import transaction
 
+from core.factories import UserFactory
 from simulations.factories import (
     PortfolioFactory,
     PortfolioHoldingsFactory,
@@ -25,7 +26,8 @@ class Command(BaseCommand):
         call_command("resetdb")
 
         with transaction.atomic():
-            StudyFactory.create_batch(options["studies"])
+            user = UserFactory()
+            StudyFactory.create_batch(options["studies"], created_by=user)
 
             for _ in range(options["portfolios"]):
                 portfolio = PortfolioFactory()

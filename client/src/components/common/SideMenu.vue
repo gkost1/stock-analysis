@@ -29,12 +29,13 @@ withDefaults(
     .sa-side-menu {
         height: 100vh;
         background-color: $surface-background-secondary;
-        padding: space(0) space(4);
+        padding: 0;
 
         &__header {
             display: flex;
             align-items: center;
             justify-content: space-between;
+            padding: 0 space(4);
         }
 
         &--xs{
