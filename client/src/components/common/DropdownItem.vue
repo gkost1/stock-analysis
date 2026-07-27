@@ -4,6 +4,12 @@
   </button>
 </template>
 
+<script setup lang="ts">
+defineEmits<{
+  click: [event: MouseEvent]
+}>()
+</script>
+
 <style scoped lang="scss">
 @use '@/styles/main' as *;
 

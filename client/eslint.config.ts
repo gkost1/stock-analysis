@@ -31,8 +31,8 @@ export default defineConfigWithVueTs(
   {
     ...pluginCypress.configs.recommended,
     files: [
-      '**/__tests__/*.{cy,spec}.{js,ts,jsx,tsx}',
-      'cypress/e2e/**/*.{cy,spec}.{js,ts,jsx,tsx}',
+      'tests/component/**/*.{cy,spec}.{js,ts,jsx,tsx}',
+      'tests/e2e/**/*.{cy,spec}.{js,ts,jsx,tsx}',
       'cypress/support/**/*.{js,ts,jsx,tsx}',
     ],
   },

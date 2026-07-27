@@ -6,7 +6,6 @@ from django.db import migrations, models
 
 
 class Migration(migrations.Migration):
-
     initial = True
 
     dependencies = [
@@ -88,9 +87,7 @@ class Migration(migrations.Migration):
                 ("deleted_at", models.DateTimeField(blank=True, null=True)),
                 (
                     "type",
-                    models.CharField(
-                        choices=[("B", "Buy"), ("S", "Sell")], max_length=1
-                    ),
+                    models.CharField(choices=[("B", "Buy"), ("S", "Sell")], max_length=1),
                 ),
                 ("ticker", models.CharField(max_length=8)),
                 ("price", models.DecimalField(decimal_places=2, max_digits=10)),
