@@ -1,5 +1,5 @@
 @use 'colors';
-
+@use 'spacing';
 html,
 body {
     min-height: 100vh;
@@ -7,5 +7,5 @@ body {
 
 body {
     margin: 0;
-    background: colors.$surface-background-default;
+    background: colors.$surface-background-gradient-default;
 }

@@ -2,7 +2,7 @@
   <Login v-if="!token" @authenticated="onAuthenticated" />
   <div v-else>
     <TopBar />
-    <RouterView />
+    <RouterView class="stock-analyzer-page"/>
   </div>
 </template>
 
@@ -27,4 +27,11 @@ function logout() {
 }
 </script>
 
-<style scoped></style>
+<style lang="scss">
+@use '@/styles/main' as *;
+
+.stock-analyzer-page{
+  padding: space(4);
+  margin: 0;
+}
+</style>

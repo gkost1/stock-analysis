@@ -1,14 +1,22 @@
 @use 'colors';
+@use 'spacing';
 
 // Font Family
 $font-family-default: 'Courier New', Courier, monospace;
 
 // Font Sizes
-$font-size-xl: 32px;
-$font-size-l: 24px;
-$font-size-m: 18px;
-$font-size-s: 16px;
-$font-size-xs: 12px;
+$font-size-xl: spacing.space(8);
+$font-size-l: spacing.space(6);
+$font-size-m: spacing.space(5);
+$font-size-s: spacing.space(4);
+$font-size-xs: spacing.space(3);
+
+// Icon Sizes
+$icon-size-xl: spacing.space(8);
+$icon-size-l: spacing.space(6);
+$icon-size-m: spacing.space(5);
+$icon-size-s: spacing.space(4);
+$icon-size-xs: spacing.space(3);
 
 body {
     font-family: $font-family-default;
@@ -17,6 +25,7 @@ body {
 
 h1 {
     font-size: $font-size-xl;
+    margin: 0
 }
 
 h2 {

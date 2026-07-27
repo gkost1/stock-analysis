@@ -15,5 +15,11 @@ $gray-900: #000000;
 // Font Colors
 $font-color-default: $gray-200;
 
+// Icon Colors
+$icon-color-default: $gray-200;
+$icon-color-hover: $gray-100;
+
 // Surface colors
-$surface-background-default: linear-gradient(180deg, $gray-900 0%, $gray-850 100%);
+$surface-background-gradient-default: linear-gradient(180deg, $gray-900 0%, $gray-850 100%);
+$surface-background-default: $gray-900;
+$surface-border-default: $gray-200;
