@@ -1,7 +1,7 @@
 <template>
   <Login v-if="!token" @authenticated="onAuthenticated" />
   <div v-else>
-    <TopBar />
+    <TopBar @logout="logout" />
     <RouterView class="stock-analyzer-page"/>
   </div>
 </template>

@@ -1,15 +1,34 @@
 <template>
     <div class="sa-top-bar">
         <h1>Stock Analyzer</h1>
-        <Button class="sa-top-bar__menu-button">
-            <Icon name="hamburger_menu" size="xl" />
-        </Button>
+        <div class="sa-top-bar__menu">
+            <Button class="sa-top-bar__menu-button" @click.stop="isMenuOpen = !isMenuOpen">
+                <Icon name="hamburger_menu" size="xl" />
+            </Button>
+            <DropdownMenu v-model:open="isMenuOpen">
+                <DropdownItem @click="onLogoutClick">Log out</DropdownItem>
+            </DropdownMenu>
+        </div>
     </div>
 </template>
 
 <script setup lang="ts">
+import { ref } from 'vue'
 import Icon from './Icon.vue'
 import Button from './Button.vue'
+import DropdownMenu from './DropdownMenu.vue'
+import DropdownItem from './DropdownItem.vue'
+
+const emit = defineEmits<{
+    logout: []
+}>()
+
+const isMenuOpen = ref(false)
+
+function onLogoutClick() {
+    isMenuOpen.value = false
+    emit('logout')
+}
 </script>
 
 
@@ -23,6 +42,11 @@ import Button from './Button.vue'
     align-items: center;
     justify-content: space-between;
     border-bottom: 1px solid $surface-border-default;
+
+    &__menu {
+        position: relative;
+        display: flex;
+    }
 
     &__menu-button {
         &:hover .sa-icon {
