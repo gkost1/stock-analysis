@@ -1,1 +1,2 @@
+from .portfolio_holdings_serializer import PortfolioHoldingsSerializer
 from .study_serializer import StudySerializer

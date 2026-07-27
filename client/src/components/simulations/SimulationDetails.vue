@@ -2,7 +2,7 @@
     <div class="sa-simulation-detail">
       <h2>{{ study?.title }}</h2>
       <StudyPerformance />
-      <PortfolioHoldings />
+      <PortfolioHoldings :study="study" />
     </div>
   </template>
 

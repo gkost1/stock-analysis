@@ -6,3 +6,4 @@
 ## Working agreement
 
 - Do not run tests, Playwright/browser verification, or lint unless explicitly asked. Implement the change and let the user decide when to verify.
+- Vue SFCs must order blocks as `<template>`, `<script>`, `<style>`.
