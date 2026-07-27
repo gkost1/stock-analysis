@@ -6,17 +6,17 @@ $font-family-default: 'Courier New', Courier, monospace;
 
 // Font Sizes
 $font-size-xl: spacing.space(8);
-$font-size-l: spacing.space(6);
-$font-size-m: spacing.space(5);
-$font-size-s: spacing.space(4);
-$font-size-xs: spacing.space(3);
+$font-size-l: spacing.space(5);
+$font-size-m: spacing.space(4);
+$font-size-s: spacing.space(3);
+$font-size-xs: spacing.space(2);
 
 // Icon Sizes
 $icon-size-xl: spacing.space(8);
-$icon-size-l: spacing.space(6);
-$icon-size-m: spacing.space(5);
-$icon-size-s: spacing.space(4);
-$icon-size-xs: spacing.space(3);
+$icon-size-l: spacing.space(5);
+$icon-size-m: spacing.space(4);
+$icon-size-s: spacing.space(3);
+$icon-size-xs: spacing.space(2);
 
 body {
     font-family: $font-family-default;

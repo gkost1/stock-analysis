@@ -20,6 +20,9 @@ $icon-color-default: $gray-200;
 $icon-color-hover: $gray-100;
 
 // Surface colors
-$surface-background-gradient-default: linear-gradient(180deg, $gray-900 0%, $gray-850 100%);
+$surface-background-gradient-default: linear-gradient(180deg, $gray-900 70%, $gray-850 100%);
+
 $surface-background-default: $gray-900;
+$surface-background-secondary: $gray-850;
+
 $surface-border-default: $gray-200;
