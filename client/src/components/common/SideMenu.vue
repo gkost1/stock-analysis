@@ -1,6 +1,9 @@
 <template>
     <div class="sa-side-menu" :class="`sa-side-menu--${size}`">
-        <h2>{{ title }}</h2>
+        <div class="sa-side-menu__header">
+            <h2>{{ title }}</h2>
+            <slot name="actions" />
+        </div>
         <slot />
     </div>
 
@@ -27,6 +30,13 @@ withDefaults(
         height: 100vh;
         background-color: $surface-background-secondary;
         padding: space(0) space(4);
+
+        &__header {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+        }
+
         &--xs{
             width: 10vw;
         }

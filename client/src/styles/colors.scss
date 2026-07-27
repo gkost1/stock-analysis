@@ -10,6 +10,9 @@ $gray-800: #404040;
 $gray-850: #202020;
 $gray-900: #000000;
 
+$purple-700: #7e22ce;
+$purple-800: #6b21a8;
+
 ///////// Semantic Tokens /////////
 
 // Font Colors
@@ -26,3 +29,8 @@ $surface-background-default: $gray-900;
 $surface-background-secondary: $gray-850;
 
 $surface-border-default: $gray-200;
+
+// Button colors
+$button-background-primary: $purple-700;
+$button-background-primary-hover: $purple-800;
+$button-border-primary: $gray-850;
