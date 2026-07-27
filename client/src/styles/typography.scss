@@ -1,0 +1,34 @@
+@use 'colors';
+@use 'spacing';
+
+// Font Family
+$font-family-default: 'Courier New', Courier, monospace;
+
+// Font Sizes
+$font-size-xl: spacing.space(8);
+$font-size-l: spacing.space(5);
+$font-size-m: spacing.space(4);
+$font-size-s: spacing.space(3);
+$font-size-xs: spacing.space(2);
+
+// Icon Sizes
+$icon-size-xl: spacing.space(8);
+$icon-size-l: spacing.space(5);
+$icon-size-m: spacing.space(4);
+$icon-size-s: spacing.space(3);
+$icon-size-xs: spacing.space(2);
+
+body {
+    font-family: $font-family-default;
+    color: colors.$font-color-default;
+}
+
+h1 {
+    font-size: $font-size-xl;
+    margin: 0
+}
+
+h2 {
+    font-size: $font-size-l;
+
+}

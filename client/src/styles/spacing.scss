@@ -1,0 +1,5 @@
+$space-unit: 4px;
+
+@function space($n) {
+    @return $n * $space-unit;
+}

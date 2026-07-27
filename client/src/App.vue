@@ -1,12 +1,24 @@
+<template>
+  <Login v-if="!token" @authenticated="onAuthenticated" />
+  <div v-else>
+    <TopBar @logout="logout" />
+    <RouterView class="sa-page"/>
+  </div>
+</template>
+
 <script setup lang="ts">
 import { ref } from 'vue'
+import { useRouter } from 'vue-router'
 import Login from './components/Login.vue'
+import TopBar from './components/common/TopBar.vue'
 
+const router = useRouter()
 const token = ref<string | null>(localStorage.getItem('token'))
 
 function onAuthenticated(newToken: string) {
   localStorage.setItem('token', newToken)
   token.value = newToken
+  router.push('/simulations')
 }
 
 function logout() {
@@ -15,12 +27,11 @@ function logout() {
 }
 </script>
 
-<template>
-  <Login v-if="!token" @authenticated="onAuthenticated" />
-  <div v-else>
-    <h1>You're logged in!</h1>
-    <button @click="logout">Log out</button>
-  </div>
-</template>
+<style lang="scss">
+@use '@/styles/main' as *;
 
-<style scoped></style>
+.sa-page{
+  padding: 0;
+  margin: 0;
+}
+</style>
