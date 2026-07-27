@@ -133,7 +133,7 @@ jobs:
         run: npm ci
       - name: Build client
         working-directory: client
-        run: npm run build
+        run: npm run build-only
       - name: Run e2e tests
         working-directory: client
         run: npm run test:e2e
