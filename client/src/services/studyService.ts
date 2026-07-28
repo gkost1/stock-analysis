@@ -1,4 +1,5 @@
 import { apiService } from './apiService'
+import type { StudyView } from './studyViewsService'
 
 export interface Study {
   id: number
@@ -7,6 +8,7 @@ export interface Study {
   end_date: string
   created_by: number
   created_at: string
+  views: StudyView[]
 }
 
 export interface CreateStudyPayload {

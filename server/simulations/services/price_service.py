@@ -14,3 +14,8 @@ def get_historical_price(ticker: str, on_date: date) -> Decimal | None:
     if history.empty:
         return None
     return Decimal(str(history["Close"].iloc[0]))
+
+
+def get_price_history(ticker: str, start_date: date, end_date: date) -> dict[date, Decimal]:
+    history = yf.Ticker(ticker).history(start=start_date, end=end_date + timedelta(days=1))
+    return {timestamp.date(): Decimal(str(close)) for timestamp, close in history["Close"].items()}

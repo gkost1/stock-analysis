@@ -33,4 +33,14 @@ export const portfolioHoldingsService = {
       payload,
     )
   },
+
+  uploadCsv(studyId: number, source: string, file: File) {
+    const formData = new FormData()
+    formData.append('source', source)
+    formData.append('file', file)
+    return apiService.postFormData<PortfolioHolding[]>(
+      `/simulations/studies/${studyId}/holdings/upload/`,
+      formData,
+    )
+  },
 }

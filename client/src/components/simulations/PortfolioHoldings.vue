@@ -2,7 +2,10 @@
   <Card class="sa-portfolio-holdings">
     <div class="sa-portfolio-holdings__header">
       <h3>Holdings</h3>
-      <Button variant="primary" @click="isAddHoldingModalOpen = true">+ Holding</Button>
+      <div class="sa-portfolio-holdings__header-actions">
+        <Button @click="isUploadCsvModalOpen = true">Upload CSV</Button>
+        <Button variant="primary" @click="isAddHoldingModalOpen = true">+ Holding</Button>
+      </div>
     </div>
 
     <div class="sa-portfolio-holdings__body">
@@ -15,6 +18,12 @@
       v-model:open="isAddHoldingModalOpen"
       :study="study"
       @created="loadHoldings"
+    />
+
+    <UploadHoldingsCsvModal
+      v-model:open="isUploadCsvModalOpen"
+      :study="study"
+      @uploaded="loadHoldings"
     />
   </Card>
 </template>
@@ -29,12 +38,14 @@ import { portfolioHoldingsService, type PortfolioHolding } from '@/services/port
 import type { Study } from '@/services/studyService';
 import AddPortfolioHoldingFormModal from './AddPortfolioHoldingFormModal.vue';
 import PortfolioListingTable from './PortfolioListingTable.vue';
+import UploadHoldingsCsvModal from './UploadHoldingsCsvModal.vue';
 
 const props = defineProps<{
   study?: Study | null
 }>();
 
 const isAddHoldingModalOpen = ref(false);
+const isUploadCsvModalOpen = ref(false);
 const isLoading = ref(false);
 const holdings = ref<PortfolioHolding[]>([]);
 
@@ -80,6 +91,11 @@ onMounted(loadHoldings);
     h3 {
       margin: 0;
     }
+  }
+
+  &__header-actions {
+    display: flex;
+    gap: space(2);
   }
 
   &__body {
