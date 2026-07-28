@@ -3,7 +3,7 @@ from rest_framework import status
 from rest_framework.test import APITestCase
 
 from core.factories import UserFactory
-from simulations.models import Study
+from simulations.models import Portfolio
 
 
 class SeedViewTests(APITestCase):
@@ -14,10 +14,10 @@ class SeedViewTests(APITestCase):
         response = self.client.post(
             "/core/testing/seed/",
             {
-                "factory": "StudyFactory",
+                "factory": "PortfolioFactory",
                 "attrs": {
                     "created_by_id": user.id,
-                    "title": "Seeded Study",
+                    "title": "Seeded Portfolio",
                     "start_date": "2024-01-01",
                     "end_date": "2024-06-01",
                 },
@@ -26,9 +26,9 @@ class SeedViewTests(APITestCase):
         )
 
         self.assertEqual(response.status_code, status.HTTP_201_CREATED)
-        study = Study.objects.get(pk=response.data["id"])
-        self.assertEqual(study.title, "Seeded Study")
-        self.assertEqual(study.created_by, user)
+        portfolio = Portfolio.objects.get(pk=response.data["id"])
+        self.assertEqual(portfolio.title, "Seeded Portfolio")
+        self.assertEqual(portfolio.created_by, user)
 
     @override_settings(DEBUG=True)
     def test_unknown_factory_returns_400(self):
@@ -44,7 +44,7 @@ class SeedViewTests(APITestCase):
     def test_disabled_outside_debug(self):
         response = self.client.post(
             "/core/testing/seed/",
-            {"factory": "StudyFactory", "attrs": {}},
+            {"factory": "PortfolioFactory", "attrs": {}},
             format="json",
         )
 

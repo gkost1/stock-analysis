@@ -1,3 +1,3 @@
 from .portfolio_holdings_view import PortfolioHoldingsViewSet
-from .study_view import StudyViewSet
-from .study_views_view import StudyViewsViewSet
+from .portfolio_view import PortfolioViewSet
+from .portfolio_views_view import PortfolioViewsViewSet

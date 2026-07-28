@@ -1,12 +1,12 @@
 <template>
-  <Card class="sa-study-performance">
-    <div class="sa-study-performance__header">
+  <Card class="sa-portfolio-performance">
+    <div class="sa-portfolio-performance__header">
       <h3>Performance</h3>
       <Button variant="primary" @click="isAddViewModalOpen = true">+ View</Button>
     </div>
 
     <EmptyState v-if="!views.length" message="No views yet." />
-    <div v-else class="sa-study-performance__grid">
+    <div v-else class="sa-portfolio-performance__grid">
       <PerformanceChartTile
         v-for="view in views"
         :key="view.id"
@@ -17,7 +17,7 @@
 
     <AddPerformanceViewModal
       v-model:open="isAddViewModalOpen"
-      :study="study"
+      :portfolio="portfolio"
       :tickers="tickers"
       @created="loadViews"
     />
@@ -25,64 +25,52 @@
 </template>
 
 <script setup lang="ts">
-import { onMounted, ref, watch } from 'vue';
+import { computed, ref, watch } from 'vue';
 import Button from '@/components/common/Button.vue';
 import Card from '@/components/common/Card.vue';
 import EmptyState from '@/components/common/EmptyState.vue';
-import { portfolioHoldingsService } from '@/services/portfolioHoldingsService';
-import { studyService, type Study } from '@/services/studyService';
-import { studyViewsService, type StudyView } from '@/services/studyViewsService';
+import type { PortfolioHolding } from '@/services/portfolioHoldingsService';
+import { portfolioService, type Portfolio } from '@/services/portfolioService';
+import { portfolioViewsService, type PortfolioView } from '@/services/portfolioViewsService';
 import AddPerformanceViewModal from './AddPerformanceViewModal.vue';
 import PerformanceChartTile from './PerformanceChartTile.vue';
 
 const props = defineProps<{
-  study?: Study | null
+  portfolio?: Portfolio | null
+  holdings: PortfolioHolding[]
 }>();
 
 const isAddViewModalOpen = ref(false);
-const tickers = ref<string[]>([]);
-const views = ref<StudyView[]>([]);
+const views = ref<PortfolioView[]>([]);
 
-async function loadTickers() {
-  if (!props.study) {
-    tickers.value = [];
-    return;
-  }
-
-  const holdings = await portfolioHoldingsService.list(props.study.id);
-  tickers.value = [...new Set(holdings.map((holding) => holding.ticker))];
-}
+const tickers = computed(() => [...new Set(props.holdings.map((holding) => holding.ticker))]);
 
 async function loadViews() {
-  if (!props.study) {
+  if (!props.portfolio) {
     views.value = [];
     return;
   }
 
-  const updated = await studyService.retrieve(props.study.id);
+  const updated = await portfolioService.retrieve(props.portfolio.id);
   views.value = updated.views;
 }
 
-async function removeView(view: StudyView) {
-  if (!props.study) return;
+async function removeView(view: PortfolioView) {
+  if (!props.portfolio) return;
 
-  await studyViewsService.delete(view.id);
+  await portfolioViewsService.delete(view.id);
   await loadViews();
 }
 
-watch(() => props.study, loadTickers, { immediate: true });
-watch(() => props.study, loadViews, { immediate: true });
-
-onMounted(() => {
-  loadTickers();
-  loadViews();
-});
+watch(() => props.portfolio, (portfolio) => {
+  views.value = portfolio?.views ?? [];
+}, { immediate: true });
 </script>
 
 <style scoped lang="scss">
 @use '@/styles/main' as *;
 
-.sa-study-performance {
+.sa-portfolio-performance {
   // Combined with .sa-card for specificity, to override Card's fixed height —
   // this card grows with its tiles and the page scrolls, not the card.
   &.sa-card {

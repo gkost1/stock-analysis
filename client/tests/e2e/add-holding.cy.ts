@@ -10,15 +10,15 @@ describe('Add holding', () => {
       password: 'Password123',
     }).then(({ body: { token, user } }) => {
       cy.request('POST', 'http://localhost:8000/core/testing/seed/', {
-        factory: 'StudyFactory',
+        factory: 'PortfolioFactory',
         attrs: {
           created_by_id: user.id,
-          title: 'E2E Study',
+          title: 'E2E Portfolio',
           start_date: '2024-01-01',
           end_date: '2024-06-01',
         },
-      }).then(({ body: study }) => {
-        cy.visit(`/simulations/${study.id}`, {
+      }).then(({ body: portfolio }) => {
+        cy.visit(`/simulations/${portfolio.id}`, {
           onBeforeLoad(win) {
             win.localStorage.setItem('token', token)
           },

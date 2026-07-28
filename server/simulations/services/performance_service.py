@@ -31,7 +31,10 @@ class PortfolioPerformanceCalculator:
             return []
 
         tickers = {holding.ticker for holding in self.holdings}
-        self._price_histories = {ticker: get_price_history(ticker, self.range_start, self.range_end) for ticker in tickers}
+        self._price_histories = {
+            ticker: get_price_history(ticker, self.range_start, self.range_end)
+            for ticker in tickers
+        }
         self._last_known_prices = dict.fromkeys(tickers)
 
         # Time-weighted return: contributions (new holdings) and withdrawals (sold
@@ -86,15 +89,21 @@ class PortfolioPerformanceCalculator:
     @staticmethod
     def _total_cost(active_holdings: dict[int, object]) -> Decimal:
         return sum(
-            (holding.cost_per_share * holding.quantity for holding in active_holdings.values()), Decimal("0")
+            (holding.cost_per_share * holding.quantity for holding in active_holdings.values()),
+            Decimal("0"),
         )
 
     @staticmethod
-    def _net_contribution(active_holdings: dict[int, object], prev_values: dict[int, Decimal]) -> Decimal:
+    def _net_contribution(
+        active_holdings: dict[int, object], prev_values: dict[int, Decimal]
+    ) -> Decimal:
         new_entrants = active_holdings.keys() - prev_values.keys()
         departed = prev_values.keys() - active_holdings.keys()
         inflows = sum(
-            (active_holdings[holding_id].cost_per_share * active_holdings[holding_id].quantity for holding_id in new_entrants),
+            (
+                active_holdings[holding_id].cost_per_share * active_holdings[holding_id].quantity
+                for holding_id in new_entrants
+            ),
             Decimal("0"),
         )
         outflows = sum((prev_values[holding_id] for holding_id in departed), Decimal("0"))
@@ -108,7 +117,11 @@ class PortfolioPerformanceCalculator:
 
         # Before the first available market price, value the holding at its cost
         # basis (what was actually invested) rather than 0.
-        return price * holding.quantity if price is not None else holding.cost_per_share * holding.quantity
+        return (
+            price * holding.quantity
+            if price is not None
+            else holding.cost_per_share * holding.quantity
+        )
 
     def _cagr(self, cumulative_growth: Decimal, days_elapsed: int) -> Decimal | None:
         if days_elapsed < self.MIN_CAGR_WINDOW_DAYS:

@@ -57,12 +57,10 @@ def _seed_factories():
         PortfolioHoldingsFactory,
         PortfolioTransactionsFactory,
         RecurringInvestmentsFactory,
-        StudyFactory,
     )
 
     return {
         "UserFactory": UserFactory,
-        "StudyFactory": StudyFactory,
         "PortfolioFactory": PortfolioFactory,
         "PortfolioHoldingsFactory": PortfolioHoldingsFactory,
         "PortfolioTransactionsFactory": PortfolioTransactionsFactory,

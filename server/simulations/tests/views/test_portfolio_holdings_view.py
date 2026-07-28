@@ -5,7 +5,7 @@ from rest_framework import status
 from rest_framework.test import APITestCase
 
 from core.factories import UserFactory
-from simulations.factories import PortfolioFactory, PortfolioHoldingsFactory, StudyFactory
+from simulations.factories import PortfolioFactory, PortfolioHoldingsFactory
 
 
 class PortfolioHoldingsViewSetTests(APITestCase):
@@ -27,34 +27,39 @@ class PortfolioHoldingsViewSetTests(APITestCase):
         self.user = UserFactory()
         self.other_user = UserFactory()
         self.client.force_authenticate(user=self.user)
-        self.study = StudyFactory(created_by=self.user)
+        self.portfolio = PortfolioFactory(created_by=self.user)
 
-    def test_list_only_returns_own_studys_holdings(self):
-        portfolio = PortfolioFactory(study=self.study)
-        own_holding = PortfolioHoldingsFactory(portfolio=portfolio)
+    def test_list_only_returns_own_portfolios_holdings(self):
+        own_holding = PortfolioHoldingsFactory(portfolio=self.portfolio)
 
-        other_study = StudyFactory(created_by=self.other_user)
-        other_portfolio = PortfolioFactory(study=other_study)
+        other_portfolio = PortfolioFactory(created_by=self.other_user)
         PortfolioHoldingsFactory(portfolio=other_portfolio)
 
-        response = self.client.get(f"/simulations/studies/{self.study.id}/holdings/")
+        response = self.client.get(
+            f"/simulations/portfolio_holdings/?portfolio={self.portfolio.id}"
+        )
 
         self.assertEqual(response.status_code, status.HTTP_200_OK)
         ids = [holding["id"] for holding in response.data]
         self.assertEqual(ids, [own_holding.id])
 
-    def test_list_other_users_study_returns_404(self):
-        other_study = StudyFactory(created_by=self.other_user)
+    def test_list_without_portfolio_param_returns_400(self):
+        response = self.client.get("/simulations/portfolio_holdings/")
 
-        response = self.client.get(f"/simulations/studies/{other_study.id}/holdings/")
+        self.assertEqual(response.status_code, status.HTTP_400_BAD_REQUEST)
+
+    def test_list_other_users_portfolio_returns_404(self):
+        other_portfolio = PortfolioFactory(created_by=self.other_user)
+
+        response = self.client.get(
+            f"/simulations/portfolio_holdings/?portfolio={other_portfolio.id}"
+        )
 
         self.assertEqual(response.status_code, status.HTTP_404_NOT_FOUND)
 
-    def test_create_creates_portfolio_when_missing(self):
-        self.assertFalse(hasattr(self.study, "portfolio"))
-
+    def test_create_requires_portfolio_param(self):
         response = self.client.post(
-            f"/simulations/studies/{self.study.id}/holdings/",
+            "/simulations/portfolio_holdings/",
             {
                 "ticker": "AAPL",
                 "quantity": "10",
@@ -63,17 +68,13 @@ class PortfolioHoldingsViewSetTests(APITestCase):
             },
         )
 
-        self.assertEqual(response.status_code, status.HTTP_201_CREATED)
-        self.study.refresh_from_db()
-        self.assertTrue(hasattr(self.study, "portfolio"))
-        self.assertEqual(self.study.portfolio.holdings.count(), 1)
+        self.assertEqual(response.status_code, status.HTTP_400_BAD_REQUEST)
 
-    def test_create_reuses_existing_portfolio(self):
-        portfolio = PortfolioFactory(study=self.study)
-
+    def test_create_creates_holding_for_owned_portfolio(self):
         response = self.client.post(
-            f"/simulations/studies/{self.study.id}/holdings/",
+            "/simulations/portfolio_holdings/",
             {
+                "portfolio": self.portfolio.id,
                 "ticker": "AAPL",
                 "quantity": "10",
                 "cost_per_share": "150.00",
@@ -82,12 +83,14 @@ class PortfolioHoldingsViewSetTests(APITestCase):
         )
 
         self.assertEqual(response.status_code, status.HTTP_201_CREATED)
-        self.assertEqual(response.data["portfolio"], portfolio.id)
+        self.assertEqual(response.data["portfolio"], self.portfolio.id)
+        self.assertEqual(self.portfolio.holdings.count(), 1)
 
     def test_create_includes_computed_fields(self):
         response = self.client.post(
-            f"/simulations/studies/{self.study.id}/holdings/",
+            "/simulations/portfolio_holdings/",
             {
+                "portfolio": self.portfolio.id,
                 "ticker": "AAPL",
                 "quantity": "10",
                 "cost_per_share": "50.00",
@@ -101,12 +104,13 @@ class PortfolioHoldingsViewSetTests(APITestCase):
         self.assertEqual(Decimal(response.data["total_value"]), Decimal("1000.00"))
         self.assertEqual(Decimal(response.data["profit_loss"]), Decimal("500.00"))
 
-    def test_create_on_other_users_study_returns_404(self):
-        other_study = StudyFactory(created_by=self.other_user)
+    def test_create_on_other_users_portfolio_returns_404(self):
+        other_portfolio = PortfolioFactory(created_by=self.other_user)
 
         response = self.client.post(
-            f"/simulations/studies/{other_study.id}/holdings/",
+            "/simulations/portfolio_holdings/",
             {
+                "portfolio": other_portfolio.id,
                 "ticker": "AAPL",
                 "quantity": "10",
                 "cost_per_share": "150.00",
@@ -117,12 +121,11 @@ class PortfolioHoldingsViewSetTests(APITestCase):
         self.assertEqual(response.status_code, status.HTTP_404_NOT_FOUND)
 
     def test_destroy_other_users_holding_returns_404(self):
-        other_study = StudyFactory(created_by=self.other_user)
-        other_portfolio = PortfolioFactory(study=other_study)
+        other_portfolio = PortfolioFactory(created_by=self.other_user)
         other_holding = PortfolioHoldingsFactory(portfolio=other_portfolio)
 
         response = self.client.delete(
-            f"/simulations/studies/{other_study.id}/holdings/{other_holding.id}/"
+            f"/simulations/portfolio_holdings/{other_holding.id}/?portfolio={other_portfolio.id}"
         )
 
         self.assertEqual(response.status_code, status.HTTP_404_NOT_FOUND)

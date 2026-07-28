@@ -32,12 +32,12 @@ import Button from '@/components/common/Button.vue';
 import EmptyState from '@/components/common/EmptyState.vue';
 import Icon from '@/components/common/Icon.vue';
 import LoadingState from '@/components/common/LoadingState.vue';
-import { studyViewsService, type PerformancePoint, type StudyView } from '@/services/studyViewsService';
+import { portfolioViewsService, type PerformancePoint, type PortfolioView } from '@/services/portfolioViewsService';
 
 ChartJS.register(CategoryScale, LinearScale, PointElement, LineElement, LineController, Tooltip, Legend);
 
 const props = defineProps<{
-  view: StudyView
+  view: PortfolioView
 }>();
 
 defineEmits<{
@@ -47,7 +47,7 @@ defineEmits<{
 const isLoading = ref(false);
 const points = ref<PerformancePoint[]>([]);
 
-const Y_AXIS_LABELS: Record<StudyView['y_axis'], string> = {
+const Y_AXIS_LABELS: Record<PortfolioView['y_axis'], string> = {
   value: 'Value',
   profit_loss: 'Profit/Loss',
   cagr: 'CAGR',
@@ -83,7 +83,7 @@ const chartOptions = {
 async function loadPerformance() {
   isLoading.value = true;
   try {
-    points.value = await studyViewsService.performance(props.view.id);
+    points.value = await portfolioViewsService.performance(props.view.id);
   } finally {
     isLoading.value = false;
   }

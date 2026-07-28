@@ -1,8 +1,10 @@
 from django.shortcuts import get_object_or_404
 from rest_framework import status, viewsets
+from rest_framework.decorators import action
+from rest_framework.exceptions import ValidationError
 from rest_framework.response import Response
 
-from simulations.models import Portfolio, PortfolioHoldings, Study
+from simulations.models import Portfolio, PortfolioHoldings
 from simulations.serializers import PortfolioHoldingsSerializer
 from simulations.services import CsvImportService
 
@@ -10,19 +12,38 @@ from simulations.services import CsvImportService
 class PortfolioHoldingsViewSet(viewsets.ModelViewSet):
     serializer_class = PortfolioHoldingsSerializer
 
-    def _get_study(self):
-        return get_object_or_404(Study, pk=self.kwargs["study_pk"], created_by=self.request.user)
+    def _get_portfolio(self, portfolio_id):
+        return get_object_or_404(Portfolio, pk=portfolio_id, created_by=self.request.user)
 
     def get_queryset(self):
-        return PortfolioHoldings.objects.filter(portfolio__study=self._get_study())
+        portfolio_id = self.request.query_params.get("portfolio")
+        if not portfolio_id:
+            raise ValidationError({"portfolio": "This query parameter is required."})
+
+        queryset = PortfolioHoldings.objects.filter(portfolio=self._get_portfolio(portfolio_id))
+
+        ticker = self.request.query_params.get("ticker")
+        if ticker:
+            queryset = queryset.filter(ticker=ticker)
+
+        return queryset
 
     def perform_create(self, serializer):
-        portfolio, _ = Portfolio.objects.get_or_create(study=self._get_study())
-        serializer.save(portfolio=portfolio)
+        portfolio_id = self.request.data.get("portfolio")
+        if not portfolio_id:
+            raise ValidationError({"portfolio": "This field is required."})
+        serializer.save(portfolio=self._get_portfolio(portfolio_id))
 
+    @action(detail=False, methods=["post"])
     def upload(self, request, *args, **kwargs):
         source = request.data.get("source")
         file = request.FILES.get("file")
+        portfolio_id = request.data.get("portfolio")
+
+        if not portfolio_id:
+            return Response(
+                {"detail": "portfolio is required."}, status=status.HTTP_400_BAD_REQUEST
+            )
 
         import_service = CsvImportService(source, file)
         if not import_service.is_supported():
@@ -30,7 +51,7 @@ class PortfolioHoldingsViewSet(viewsets.ModelViewSet):
         if not file:
             return Response({"detail": "No file provided."}, status=status.HTTP_400_BAD_REQUEST)
 
-        portfolio, _ = Portfolio.objects.get_or_create(study=self._get_study())
+        portfolio = self._get_portfolio(portfolio_id)
         rows = import_service.parse()
 
         created = []
@@ -39,4 +60,6 @@ class PortfolioHoldingsViewSet(viewsets.ModelViewSet):
             serializer.is_valid(raise_exception=True)
             created.append(serializer.save(portfolio=portfolio))
 
-        return Response(PortfolioHoldingsSerializer(created, many=True).data, status=status.HTTP_201_CREATED)
+        return Response(
+            PortfolioHoldingsSerializer(created, many=True).data, status=status.HTTP_201_CREATED
+        )

@@ -24,10 +24,10 @@ import Form from '@/components/common/Form.vue';
 import FormField from '@/components/common/FormField.vue';
 import Modal from '@/components/common/Modal.vue';
 import { portfolioHoldingsService } from '@/services/portfolioHoldingsService';
-import type { Study } from '@/services/studyService';
+import type { Portfolio } from '@/services/portfolioService';
 
 const props = defineProps<{
-  study?: Study | null
+  portfolio?: Portfolio | null
 }>();
 
 const emit = defineEmits<{
@@ -43,9 +43,9 @@ const datePurchased = ref('');
 const dateSold = ref('');
 
 async function handleSubmit() {
-  if (!props.study) return;
+  if (!props.portfolio) return;
 
-  await portfolioHoldingsService.create(props.study.id, {
+  await portfolioHoldingsService.create(props.portfolio.id, {
     ticker: ticker.value,
     quantity: quantity.value,
     cost_per_share: costPerShare.value,

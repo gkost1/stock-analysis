@@ -27,10 +27,10 @@ import Form from '@/components/common/Form.vue';
 import Modal from '@/components/common/Modal.vue';
 import SelectField from '@/components/common/SelectField.vue';
 import { portfolioHoldingsService } from '@/services/portfolioHoldingsService';
-import type { Study } from '@/services/studyService';
+import type { Portfolio } from '@/services/portfolioService';
 
 const props = defineProps<{
-  study?: Study | null
+  portfolio?: Portfolio | null
 }>();
 
 const emit = defineEmits<{
@@ -51,12 +51,12 @@ function handleFileChange(event: Event) {
 }
 
 async function handleSubmit() {
-  if (!props.study || !file.value) return;
+  if (!props.portfolio || !file.value) return;
 
   error.value = '';
   isUploading.value = true;
   try {
-    await portfolioHoldingsService.uploadCsv(props.study.id, source.value, file.value);
+    await portfolioHoldingsService.uploadCsv(props.portfolio.id, source.value, file.value);
     open.value = false;
     file.value = null;
     emit('uploaded');

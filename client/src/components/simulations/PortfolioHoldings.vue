@@ -16,56 +16,42 @@
 
     <AddPortfolioHoldingFormModal
       v-model:open="isAddHoldingModalOpen"
-      :study="study"
-      @created="loadHoldings"
+      :portfolio="portfolio"
+      @created="$emit('refresh')"
     />
 
     <UploadHoldingsCsvModal
       v-model:open="isUploadCsvModalOpen"
-      :study="study"
-      @uploaded="loadHoldings"
+      :portfolio="portfolio"
+      @uploaded="$emit('refresh')"
     />
   </Card>
 </template>
 
 <script setup lang="ts">
-import { onMounted, ref, watch } from 'vue';
+import { ref } from 'vue';
 import Button from '@/components/common/Button.vue';
 import Card from '@/components/common/Card.vue';
 import EmptyState from '@/components/common/EmptyState.vue';
 import LoadingState from '@/components/common/LoadingState.vue';
-import { portfolioHoldingsService, type PortfolioHolding } from '@/services/portfolioHoldingsService';
-import type { Study } from '@/services/studyService';
+import type { PortfolioHolding } from '@/services/portfolioHoldingsService';
+import type { Portfolio } from '@/services/portfolioService';
 import AddPortfolioHoldingFormModal from './AddPortfolioHoldingFormModal.vue';
 import PortfolioListingTable from './PortfolioListingTable.vue';
 import UploadHoldingsCsvModal from './UploadHoldingsCsvModal.vue';
 
-const props = defineProps<{
-  study?: Study | null
+defineProps<{
+  portfolio?: Portfolio | null
+  holdings: PortfolioHolding[]
+  isLoading: boolean
+}>();
+
+defineEmits<{
+  refresh: []
 }>();
 
 const isAddHoldingModalOpen = ref(false);
 const isUploadCsvModalOpen = ref(false);
-const isLoading = ref(false);
-const holdings = ref<PortfolioHolding[]>([]);
-
-async function loadHoldings() {
-  if (!props.study) {
-    holdings.value = [];
-    return;
-  }
-
-  isLoading.value = true;
-  try {
-    holdings.value = await portfolioHoldingsService.list(props.study.id);
-  } finally {
-    isLoading.value = false;
-  }
-}
-
-watch(() => props.study, loadHoldings, { immediate: true });
-
-onMounted(loadHoldings);
 </script>
 
 <style scoped lang="scss">

@@ -1,4 +1,4 @@
 from .portfolio_holdings_serializer import PortfolioHoldingsSerializer
 from .portfolio_performance_serializer import PortfolioPerformanceSerializer
-from .study_serializer import StudySerializer
-from .study_views_serializer import StudyViewsSerializer
+from .portfolio_serializer import PortfolioSerializer
+from .portfolio_views_serializer import PortfolioViewsSerializer

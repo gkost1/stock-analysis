@@ -21,13 +21,13 @@ import Button from '@/components/common/Button.vue';
 import Form from '@/components/common/Form.vue';
 import Modal from '@/components/common/Modal.vue';
 import SelectField from '@/components/common/SelectField.vue';
-import { studyViewsService, type StudyViewYAxis } from '@/services/studyViewsService';
-import type { Study } from '@/services/studyService';
+import { portfolioViewsService, type PortfolioViewYAxis } from '@/services/portfolioViewsService';
+import type { Portfolio } from '@/services/portfolioService';
 
 const PORTFOLIO_ASSET = '__portfolio__';
 
 const props = defineProps<{
-  study?: Study | null
+  portfolio?: Portfolio | null
   tickers: string[]
 }>();
 
@@ -39,7 +39,7 @@ const open = defineModel<boolean>('open', { default: false });
 
 const asset = ref(PORTFOLIO_ASSET);
 const xAxis = ref('time');
-const yAxis = ref<StudyViewYAxis>('value');
+const yAxis = ref<PortfolioViewYAxis>('value');
 
 const assetOptions = computed(() => [
   { value: PORTFOLIO_ASSET, label: 'Complete Portfolio' },
@@ -55,10 +55,10 @@ const yAxisOptions = [
 ];
 
 async function handleSubmit() {
-  if (!props.study) return;
+  if (!props.portfolio) return;
 
-  await studyViewsService.create({
-    study: props.study.id,
+  await portfolioViewsService.create({
+    portfolio: props.portfolio.id,
     asset: asset.value === PORTFOLIO_ASSET ? null : asset.value,
     x_axis: xAxis.value,
     y_axis: yAxis.value,

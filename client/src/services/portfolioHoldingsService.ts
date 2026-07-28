@@ -22,25 +22,24 @@ export interface CreatePortfolioHoldingPayload {
   date_sold?: string | null
 }
 
+const BASE_PATH = '/simulations/portfolio_holdings/'
+
 export const portfolioHoldingsService = {
-  list(studyId: number) {
-    return apiService.list<PortfolioHolding>(`/simulations/studies/${studyId}/holdings/`)
+  list(portfolioId: number, ticker?: string) {
+    const params = new URLSearchParams({ portfolio: String(portfolioId) })
+    if (ticker) params.set('ticker', ticker)
+    return apiService.list<PortfolioHolding>(`${BASE_PATH}?${params}`)
   },
 
-  create(studyId: number, payload: CreatePortfolioHoldingPayload) {
-    return apiService.post<PortfolioHolding>(
-      `/simulations/studies/${studyId}/holdings/`,
-      payload,
-    )
+  create(portfolioId: number, payload: CreatePortfolioHoldingPayload) {
+    return apiService.post<PortfolioHolding>(BASE_PATH, { ...payload, portfolio: portfolioId })
   },
 
-  uploadCsv(studyId: number, source: string, file: File) {
+  uploadCsv(portfolioId: number, source: string, file: File) {
     const formData = new FormData()
+    formData.append('portfolio', String(portfolioId))
     formData.append('source', source)
     formData.append('file', file)
-    return apiService.postFormData<PortfolioHolding[]>(
-      `/simulations/studies/${studyId}/holdings/upload/`,
-      formData,
-    )
+    return apiService.postFormData<PortfolioHolding[]>(`${BASE_PATH}upload/`, formData)
   },
 }
