@@ -1,5 +1,6 @@
+from .cached_ticker_price import CachedTickerPrice
 from .portfolio import Portfolio
-from .portfolio_holdings import PortfolioHoldings
+from .portfolio_holdings import ConsolidatedPortfolioHolding, PortfolioHoldings
 from .portfolio_transactions import PortfolioTransactions
+from .portfolio_views import PortfolioViews
 from .recurring_investments import RecurringInvestments
-from .study import Study

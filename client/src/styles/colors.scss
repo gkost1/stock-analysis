@@ -13,10 +13,15 @@ $gray-900: #000000;
 $purple-700: #7e22ce;
 $purple-800: #6b21a8;
 
+$green-600: #16a34a;
+$red-600: #dc2626;
+
 ///////// Semantic Tokens /////////
 
 // Font Colors
 $font-color-default: $gray-200;
+$font-color-positive: $green-600;
+$font-color-negative: $red-600;
 
 // Icon Colors
 $icon-color-default: $gray-200;

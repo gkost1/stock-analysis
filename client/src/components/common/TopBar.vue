@@ -6,6 +6,7 @@
                 <Icon name="hamburger_menu" size="xl" />
             </Button>
             <DropdownMenu v-model:open="isMenuOpen">
+                <DropdownItem @click="onSimulationsClick">Simulations</DropdownItem>
                 <DropdownItem @click="onLogoutClick">Log out</DropdownItem>
             </DropdownMenu>
         </div>
@@ -14,6 +15,7 @@
 
 <script setup lang="ts">
 import { ref } from 'vue'
+import { useRouter } from 'vue-router'
 import Icon from './Icon.vue'
 import Button from './Button.vue'
 import DropdownMenu from './DropdownMenu.vue'
@@ -23,7 +25,13 @@ const emit = defineEmits<{
     logout: []
 }>()
 
+const router = useRouter()
 const isMenuOpen = ref(false)
+
+function onSimulationsClick() {
+    isMenuOpen.value = false
+    router.push({ name: 'simulations' })
+}
 
 function onLogoutClick() {
     isMenuOpen.value = false
