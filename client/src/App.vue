@@ -18,7 +18,7 @@ const token = ref<string | null>(localStorage.getItem('token'))
 function onAuthenticated(newToken: string) {
   localStorage.setItem('token', newToken)
   token.value = newToken
-  router.push('/simulations')
+  router.push('/portfolios')
 }
 
 function logout() {

@@ -1,7 +1,7 @@
 import { uniqueUsername } from './utils'
 
 describe('Create account', () => {
-  it('registers a new user and lands on the simulations page', () => {
+  it('registers a new user and lands on the portfolios page', () => {
     const username = uniqueUsername()
 
     cy.visit('/')
@@ -12,7 +12,7 @@ describe('Create account', () => {
     cy.contains('label', 'Password').find('input').type('Password123')
     cy.contains('button', 'Create account').click()
 
-    cy.location('pathname').should('eq', '/simulations')
+    cy.location('pathname').should('eq', '/portfolios')
     cy.get('.sa-top-bar').should('contain.text', 'Stock Analyzer')
     cy.window().its('localStorage.token').should('exist')
   })

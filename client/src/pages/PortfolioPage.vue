@@ -58,7 +58,7 @@ async function loadPortfolios() {
 }
 
 function selectPortfolio(id: number) {
-  router.push(`/simulations/${id}`);
+  router.push(`/portfolios/${id}`);
 }
 
 async function handleSubmit() {

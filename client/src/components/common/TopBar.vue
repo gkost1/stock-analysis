@@ -6,7 +6,7 @@
                 <Icon name="hamburger_menu" size="xl" />
             </Button>
             <DropdownMenu v-model:open="isMenuOpen">
-                <DropdownItem @click="onSimulationsClick">Simulations</DropdownItem>
+                <DropdownItem @click="onSimulationsClick">Portfolios</DropdownItem>
                 <DropdownItem @click="onLogoutClick">Log out</DropdownItem>
             </DropdownMenu>
         </div>
@@ -30,7 +30,7 @@ const isMenuOpen = ref(false)
 
 function onSimulationsClick() {
     isMenuOpen.value = false
-    router.push({ name: 'simulations' })
+    router.push({ name: 'portfolios' })
 }
 
 function onLogoutClick() {

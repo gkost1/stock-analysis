@@ -5,8 +5,8 @@ const router = createRouter({
   history: createWebHistory(import.meta.env.BASE_URL),
   routes: [
     {
-      path: '/simulations/:id?',
-      name: 'simulations',
+      path: '/portfolios/:id?',
+      name: 'portfolios',
       component: PortfolioPage,
     },
   ],

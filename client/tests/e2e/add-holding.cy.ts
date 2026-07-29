@@ -18,7 +18,7 @@ describe('Add holding', () => {
           end_date: '2024-06-01',
         },
       }).then(({ body: portfolio }) => {
-        cy.visit(`/simulations/${portfolio.id}`, {
+        cy.visit(`/portfolios/${portfolio.id}`, {
           onBeforeLoad(win) {
             win.localStorage.setItem('token', token)
           },
