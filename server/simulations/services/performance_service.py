@@ -2,7 +2,7 @@ import math
 from datetime import date, timedelta
 from decimal import Decimal
 
-from .price_service import get_price_history
+from .price_service import AssetPriceService
 
 
 class PortfolioPerformanceCalculator:
@@ -32,7 +32,7 @@ class PortfolioPerformanceCalculator:
 
         tickers = {holding.ticker for holding in self.holdings}
         self._price_histories = {
-            ticker: get_price_history(ticker, self.range_start, self.range_end)
+            ticker: AssetPriceService.get_price_history(ticker, self.range_start, self.range_end)
             for ticker in tickers
         }
         self._last_known_prices = dict.fromkeys(tickers)

@@ -1,3 +1,3 @@
 from .csv_import_service import CsvImportService
 from .performance_service import PortfolioPerformanceCalculator
-from .price_service import get_current_price, get_historical_price, get_price_history
+from .price_service import AssetPriceService

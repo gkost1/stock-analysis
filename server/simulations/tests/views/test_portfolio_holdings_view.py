@@ -11,14 +11,14 @@ from simulations.factories import PortfolioFactory, PortfolioHoldingsFactory
 class PortfolioHoldingsViewSetTests(APITestCase):
     def setUp(self):
         current_price_patcher = mock.patch(
-            "simulations.models.portfolio_holdings.get_current_price",
+            "simulations.models.portfolio_holdings.AssetPriceService.get_current_price",
             return_value=Decimal("100.00"),
         )
         current_price_patcher.start()
         self.addCleanup(current_price_patcher.stop)
 
         historical_price_patcher = mock.patch(
-            "simulations.factories.portfolio_holdings_factory.get_historical_price",
+            "simulations.factories.portfolio_holdings_factory.AssetPriceService.get_historical_price",
             return_value=Decimal("100.00"),
         )
         historical_price_patcher.start()
@@ -129,3 +129,41 @@ class PortfolioHoldingsViewSetTests(APITestCase):
         )
 
         self.assertEqual(response.status_code, status.HTTP_404_NOT_FOUND)
+
+    def test_list_with_consolidate_groups_lots_by_ticker(self):
+        PortfolioHoldingsFactory(
+            portfolio=self.portfolio,
+            ticker="AAPL",
+            quantity=Decimal("10"),
+            cost_per_share=Decimal("10.00"),
+        )
+        PortfolioHoldingsFactory(
+            portfolio=self.portfolio,
+            ticker="AAPL",
+            quantity=Decimal("30"),
+            cost_per_share=Decimal("20.00"),
+        )
+        PortfolioHoldingsFactory(portfolio=self.portfolio, ticker="MSFT")
+
+        response = self.client.get(
+            f"/simulations/portfolio_holdings/?portfolio={self.portfolio.id}&consolidate=true"
+        )
+
+        self.assertEqual(response.status_code, status.HTTP_200_OK)
+        by_ticker = {row["ticker"]: row for row in response.data}
+        self.assertEqual(set(by_ticker), {"AAPL", "MSFT"})
+        self.assertEqual(Decimal(by_ticker["AAPL"]["quantity"]), Decimal("40"))
+        self.assertEqual(Decimal(by_ticker["AAPL"]["cost_per_share"]), Decimal("17.5"))
+        self.assertEqual(by_ticker["AAPL"]["date_purchased"], "varies")
+
+    def test_list_with_consolidate_respects_ticker_filter(self):
+        PortfolioHoldingsFactory(portfolio=self.portfolio, ticker="AAPL")
+        PortfolioHoldingsFactory(portfolio=self.portfolio, ticker="MSFT")
+
+        response = self.client.get(
+            f"/simulations/portfolio_holdings/?portfolio={self.portfolio.id}"
+            "&consolidate=true&ticker=AAPL"
+        )
+
+        self.assertEqual(response.status_code, status.HTTP_200_OK)
+        self.assertEqual([row["ticker"] for row in response.data], ["AAPL"])

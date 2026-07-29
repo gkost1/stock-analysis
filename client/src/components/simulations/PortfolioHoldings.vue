@@ -3,14 +3,21 @@
     <div class="sa-portfolio-holdings__header">
       <h3>Holdings</h3>
       <div class="sa-portfolio-holdings__header-actions">
+        <SegmentedToggle
+          v-model="viewMode"
+          :options="[
+            { label: 'By Ticker', value: 'consolidated' },
+            { label: 'By Lot', value: 'detailed' },
+          ]"
+        />
         <Button @click="isUploadCsvModalOpen = true">Upload CSV</Button>
         <Button variant="primary" @click="isAddHoldingModalOpen = true">+ Holding</Button>
       </div>
     </div>
 
     <div class="sa-portfolio-holdings__body">
-      <LoadingState v-if="isLoading" message="Loading Holdings" />
-      <PortfolioListingTable v-else-if="holdings.length" :holdings="holdings" />
+      <LoadingState v-if="isDisplayLoading" message="Loading Holdings" />
+      <PortfolioListingTable v-else-if="displayedHoldings.length" :holdings="displayedHoldings" />
       <EmptyState v-else message="No holdings yet." />
     </div>
 
@@ -29,18 +36,19 @@
 </template>
 
 <script setup lang="ts">
-import { ref } from 'vue';
+import { computed, ref, watch } from 'vue';
 import Button from '@/components/common/Button.vue';
 import Card from '@/components/common/Card.vue';
 import EmptyState from '@/components/common/EmptyState.vue';
 import LoadingState from '@/components/common/LoadingState.vue';
-import type { PortfolioHolding } from '@/services/portfolioHoldingsService';
+import SegmentedToggle from '@/components/common/SegmentedToggle.vue';
+import { portfolioHoldingsService, type PortfolioHolding } from '@/services/portfolioHoldingsService';
 import type { Portfolio } from '@/services/portfolioService';
 import AddPortfolioHoldingFormModal from './AddPortfolioHoldingFormModal.vue';
 import PortfolioListingTable from './PortfolioListingTable.vue';
 import UploadHoldingsCsvModal from './UploadHoldingsCsvModal.vue';
 
-defineProps<{
+const props = defineProps<{
   portfolio?: Portfolio | null
   holdings: PortfolioHolding[]
   isLoading: boolean
@@ -52,6 +60,34 @@ defineEmits<{
 
 const isAddHoldingModalOpen = ref(false);
 const isUploadCsvModalOpen = ref(false);
+const viewMode = ref<'consolidated' | 'detailed'>('consolidated');
+
+const consolidatedHoldings = ref<PortfolioHolding[]>([]);
+const isLoadingConsolidated = ref(false);
+
+async function loadConsolidatedHoldings() {
+  if (!props.portfolio) {
+    consolidatedHoldings.value = [];
+    return;
+  }
+
+  isLoadingConsolidated.value = true;
+  try {
+    consolidatedHoldings.value = await portfolioHoldingsService.list(props.portfolio.id, { consolidate: true });
+  } finally {
+    isLoadingConsolidated.value = false;
+  }
+}
+
+watch([() => props.portfolio, () => props.holdings], loadConsolidatedHoldings, { immediate: true });
+
+const displayedHoldings = computed(() =>
+  viewMode.value === 'consolidated' ? consolidatedHoldings.value : props.holdings,
+);
+
+const isDisplayLoading = computed(
+  () => props.isLoading || (viewMode.value === 'consolidated' && isLoadingConsolidated.value),
+);
 </script>
 
 <style scoped lang="scss">
@@ -81,6 +117,7 @@ const isUploadCsvModalOpen = ref(false);
 
   &__header-actions {
     display: flex;
+    align-items: center;
     gap: space(2);
   }
 

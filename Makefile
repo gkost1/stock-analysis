@@ -3,6 +3,7 @@
 ci: ci_server ci_client
 
 ci_server:
+	cd server && poetry run ruff format .
 	cd server && poetry run ruff check . --fix
 	cd server && poetry run pytest
 

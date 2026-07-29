@@ -25,9 +25,10 @@ export interface CreatePortfolioHoldingPayload {
 const BASE_PATH = '/simulations/portfolio_holdings/'
 
 export const portfolioHoldingsService = {
-  list(portfolioId: number, ticker?: string) {
+  list(portfolioId: number, options?: { ticker?: string; consolidate?: boolean }) {
     const params = new URLSearchParams({ portfolio: String(portfolioId) })
-    if (ticker) params.set('ticker', ticker)
+    if (options?.ticker) params.set('ticker', options.ticker)
+    if (options?.consolidate) params.set('consolidate', 'true')
     return apiService.list<PortfolioHolding>(`${BASE_PATH}?${params}`)
   },
 

@@ -4,7 +4,6 @@ from django.db import migrations, models
 
 
 class Migration(migrations.Migration):
-
     dependencies = [
         ("simulations", "0001_initial"),
     ]
@@ -29,9 +28,7 @@ class Migration(migrations.Migration):
                 ("ticker", models.CharField(max_length=8, unique=True)),
                 (
                     "price",
-                    models.DecimalField(
-                        blank=True, decimal_places=4, max_digits=12, null=True
-                    ),
+                    models.DecimalField(blank=True, decimal_places=4, max_digits=12, null=True),
                 ),
             ],
             options={

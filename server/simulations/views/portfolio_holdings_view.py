@@ -5,7 +5,10 @@ from rest_framework.exceptions import ValidationError
 from rest_framework.response import Response
 
 from simulations.models import Portfolio, PortfolioHoldings
-from simulations.serializers import PortfolioHoldingsSerializer
+from simulations.serializers import (
+    ConsolidatedPortfolioHoldingSerializer,
+    PortfolioHoldingsSerializer,
+)
 from simulations.services import CsvImportService
 
 
@@ -27,6 +30,16 @@ class PortfolioHoldingsViewSet(viewsets.ModelViewSet):
             queryset = queryset.filter(ticker=ticker)
 
         return queryset
+
+    def list(self, request, *args, **kwargs):
+        queryset = self.filter_queryset(self.get_queryset())
+
+        if request.query_params.get("consolidate") in ("1", "true", "True"):
+            consolidated = PortfolioHoldings.consolidate_by_ticker(queryset)
+            serializer = ConsolidatedPortfolioHoldingSerializer(consolidated, many=True)
+            return Response(serializer.data)
+
+        return super().list(request, *args, **kwargs)
 
     def perform_create(self, serializer):
         portfolio_id = self.request.data.get("portfolio")

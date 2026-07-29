@@ -1,4 +1,7 @@
-from .portfolio_holdings_serializer import PortfolioHoldingsSerializer
+from .portfolio_holdings_serializer import (
+    ConsolidatedPortfolioHoldingSerializer,
+    PortfolioHoldingsSerializer,
+)
 from .portfolio_performance_serializer import PortfolioPerformanceSerializer
 from .portfolio_serializer import PortfolioSerializer
 from .portfolio_views_serializer import PortfolioViewsSerializer

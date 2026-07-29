@@ -3,7 +3,7 @@ from random import randint
 import factory
 
 from simulations.models import PortfolioHoldings
-from simulations.services import get_historical_price
+from simulations.services import AssetPriceService
 
 from .faker import fake
 from .portfolio_factory import PortfolioFactory
@@ -26,7 +26,7 @@ class PortfolioHoldingsFactory(factory.django.DjangoModelFactory):
     date_sold = None
     cost_per_share = factory.LazyAttribute(
         lambda o: (
-            get_historical_price(o.ticker, o.date_purchased)
+            AssetPriceService.get_historical_price(o.ticker, o.date_purchased)
             or fake.pydecimal(left_digits=randint(1, 3), right_digits=2, positive=True, min_value=1)
         )
     )
